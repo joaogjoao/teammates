@@ -5,6 +5,7 @@ apply plugin: "checkstyle"
 apply plugin: "pmd"
 apply plugin: "findbugs"
 apply plugin: "jacoco"
+apply plugin: "com.github.kt3k.coveralls"
 
 def appengineVersion = "1.9.27"
 def libsVersion = "5.60"
@@ -14,9 +15,13 @@ def libsPath = "libs/libsV${libsVersion}.zip"
 buildscript {
     repositories {
         mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath "com.google.appengine:gradle-appengine-plugin:1.9.27"
+        classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3"
     }
 }
 
@@ -463,18 +468,36 @@ jacoco {
     toolVersion = "0.7.6.201602180812"
 }
 
+task jacocoMerge(type: JacocoMerge) {
+    destinationFile = file("${buildDir}/jacocoMerge/jacocoMerge.exec")
+    executionData fileTree("${buildDir}/jacoco").files
+}
+
 jacocoTestReport {
     description "Runs coverage session from available test run data."
     group "Test"
+    executionData jacocoMerge.destinationFile
     sourceDirectories = files(sourceSets.main.java.srcDirs, sourceSets.test.java.srcDirs)
     classDirectories =  files(sourceSets.main.output, sourceSets.test.output)
     reports {
-        xml.enabled false
+        xml.enabled true
         html.enabled true
     }
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
             fileTree(dir: it, exclude: ["**/*.jar", "teammates/client/**/*", "**/*Filter.class", "**/*Servlet.class"])
         })
+    }
+    dependsOn jacocoMerge
+}
+
+coveralls {
+    sourceDirs = files(sourceSets.main.java.srcDirs, sourceSets.test.java.srcDirs).files.absolutePath
+}
+
+tasks.coveralls {
+    dependsOn jacocoTestReport
+    onlyIf {
+        System.env.'CI'
     }
 }

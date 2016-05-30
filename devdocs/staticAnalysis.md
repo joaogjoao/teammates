@@ -144,6 +144,9 @@ To run all static analysis tasks in one sitting, run the following command:
 
 ### Travis CI
 
+For Java tests, if your build and run is successful, [Coveralls](https://coveralls.io) will pull the test coverage data and generate a report on their server.
+The link to the report will be displayed in each PR, or by clicking the badge on the repository homepage.
+
 For JavaScript unit tests, coverage is done concurrently with the tests themselves.
 A coverage lower bound is enforced via `AllJsTests.java`, lower than which the build will fail.
 

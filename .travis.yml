@@ -45,7 +45,7 @@ after_failure:
   - ./gradlew generateFailedCmd
 
 after_success:
-  - ./gradlew jacocoTestReport
+  - ./gradlew coveralls
 
 after_script:
   - ./gradlew appengineStop
