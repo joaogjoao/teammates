@@ -33,7 +33,6 @@ import teammates.logic.core.InstructorsLogic;
 import teammates.logic.core.Sendgrid;
 import teammates.logic.core.StudentsLogic;
 import teammates.test.cases.BaseComponentTestCase;
-import teammates.test.cases.ui.browsertests.SystemErrorEmailReportTest;
 import teammates.test.driver.AssertHelper;
 import teammates.test.driver.TestProperties;
 
@@ -373,12 +372,6 @@ public class EmailsTest extends BaseComponentTestCase {
 
         
         AssertionError error = new AssertionError("invalid parameter");
-        StackTraceElement s1 = new StackTraceElement(
-                SystemErrorEmailReportTest.class.getName(),
-                "testSystemCrashReportEmailContent",
-                "SystemErrorEmailReportTest.java",
-                89);
-        error.setStackTrace(new StackTraceElement[] {s1});
         String stackTrace = TeammatesException.toStringWithStackTrace(error);
         String requestMethod = "GET";
         String requestUserAgent = "user-agent";
@@ -469,12 +462,6 @@ public class EmailsTest extends BaseComponentTestCase {
 
         ______TS("System crash report email");
         AssertionError error = new AssertionError("invalid parameter");
-        StackTraceElement s1 = new StackTraceElement(
-                                        SystemErrorEmailReportTest.class.getName(),
-                                        "testSystemCrashReportEmailContent",
-                                        "SystemErrorEmailReportTest.java",
-                                        89);
-        error.setStackTrace(new StackTraceElement[] { s1 });
         String requestMethod = "GET";
         String requestUserAgent = "user-agent";
         String requestPath = "/page/studentHome";
